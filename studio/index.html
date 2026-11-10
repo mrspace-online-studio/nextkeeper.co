@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Next Keeper · Studio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%2240 20 320 190%22%3E%3Cpath d=%22M200 104V90c0-10 16-16 16-34 0-18-13-28-26-28-14 0-22 10-22 22M200 110c-24 14-90 46-136 66-14 6-14 18 2 18h268c16 0 16-12 2-18-46-20-112-52-136-66%22 fill=%22none%22 stroke=%22%23E2BF7E%22 stroke-width=%2214%22 stroke-linecap=%22round%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#0F1314; --card:#1A2022; --line:#262C2E; --line2:#3A4144;
+  --cream:#F1E9DC; --muted:#B9B0A2; --story:#D8CFC1; --gold:#E2BF7E; --plum:#4A3B48;
+  --strip:#F4F1EC; --ink:#15191A; --btn:#D8CFC1; --sun:#FFE14D;
+  --serif:"Instrument Serif",Georgia,serif; --ui:Inter,"Helvetica Neue",Arial,sans-serif; --mono:"Geist Mono",ui-monospace,Menlo,monospace; --mark:"Cormorant Garamond",Georgia,serif;
+  --pad:clamp(14px,3vw,40px);
+  color-scheme:dark; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px)}
+body{margin:0;background:var(--bg);color:var(--cream);font:400 15px/1.5 var(--ui);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--strip)}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--gold)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1440px;margin:0 auto;padding:0 var(--pad)}
+
+/* top strip */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--strip);color:var(--ink);border-bottom:1px solid #E2DDD4}
+.top-in{max-width:1440px;margin:0 auto;padding:4px calc(var(--pad) - 8px) 4px var(--pad);display:flex;align-items:center;gap:12px}
+.top-in .hanger{width:30px;height:auto;flex:none}
+.ship{flex:1;min-width:0;font:400 11px/1.35 var(--mono);color:var(--plum)}
+.icon-btn{position:relative;width:44px;height:44px;border:0;background:none;display:grid;place-items:center;color:var(--ink);border-radius:22px}
+.icon-btn svg{width:20px;height:20px}
+.badge{position:absolute;top:5px;right:4px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--plum);color:#fff;font:600 10px/17px var(--ui);text-align:center}
+.badge[hidden]{display:none}
+.search{display:none;padding:8px var(--pad) 10px;background:var(--strip)}
+.search.on{display:block}
+.search input{width:100%;max-width:640px;border:1px solid #D6D0C6;border-radius:10px;padding:11px 14px;font:400 15px var(--ui);background:#fff;color:var(--ink)}
+
+.preview-note{background:var(--plum);color:#fff;text-align:center;font-size:12.5px;padding:7px var(--pad)}
+.preview-note[hidden]{display:none}
+
+/* hero */
+.hero{display:grid;gap:26px;padding:26px 0 0}
+.intro{text-align:center;display:flex;flex-direction:column;align-items:center}
+.seal{width:min(280px,72vw)}
+.hero h1{margin:12px 0 0;font:400 clamp(44px,12vw,72px)/.98 var(--serif);letter-spacing:-.01em;max-width:12ch;text-wrap:balance}
+.slogan{margin:12px 0 0;font:italic 400 clamp(17px,4.4vw,21px)/1.3 var(--serif);color:var(--gold);max-width:30ch}
+@media (min-width:1024px){
+  .hero{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:48px;padding-top:40px}
+  .intro{text-align:left;align-items:flex-start}
+  .seal{width:300px;margin-left:-18px}
+}
+
+/* stage: tonight's resident */
+.stage-card{background:var(--card);border-radius:14px;padding:16px 16px 18px}
+.stage-head{display:flex;justify-content:space-between;gap:12px;font:400 11px/1.4 var(--mono);color:var(--gold)}
+.stage-head span:last-child{color:var(--muted)}
+.stage{position:relative;height:clamp(300px,82vw,400px);margin-top:10px;border-radius:10px;overflow:hidden;background:var(--tone,#4b3a33);transition:background-color .9s ease}
+.stage::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 55% at 50% 42%,rgba(255,255,255,.16),transparent 70%),linear-gradient(to bottom,rgba(0,0,0,.25),transparent 30%,transparent 78%,rgba(0,0,0,.35))}
+.rod{position:absolute;left:0;right:0;top:20px;height:3px;background:rgba(241,233,220,.38)}
+.hooks{position:absolute;left:0;right:0;top:9px;display:flex;justify-content:space-around;opacity:.35}
+.hooks svg{width:16px;height:18px}
+.floor{position:absolute;left:50%;bottom:16px;width:44%;height:14px;margin-left:-22%;border-radius:50%;background:rgba(0,0,0,.35);transition:opacity .6s ease}
+.piece{position:absolute;left:50%;top:9px;width:min(62%,250px);transform-origin:50% 0;display:flex;flex-direction:column;align-items:center;will-change:transform,opacity}
+.piece svg{width:38px;height:26px;margin-bottom:-3px}
+.piece .photo{width:100%;aspect-ratio:4/5;border-radius:8px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.45);background:#222}
+.piece img{width:100%;height:100%;object-fit:cover}
+.stage-meta{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-top:12px;transition:opacity .45s ease}
+.stage-meta .name{display:block;font:italic 400 clamp(26px,7vw,34px)/1.05 var(--serif)}
+.stage-meta .sub{display:block;margin-top:4px;font-size:12.5px;color:var(--muted)}
+.stage-meta .price{font-size:17px;font-weight:600;flex:none}
+.stage-line{margin:10px 0 0;min-height:44px;font:400 16px/1.4 var(--serif);color:var(--story);transition:opacity .45s ease}
+.stage-controls{display:flex;gap:8px;margin-top:14px}
+.adopt{flex:1;height:48px;border:0;border-radius:10px;background:var(--btn);color:var(--bg);font:600 15px var(--ui)}
+.adopt:disabled{opacity:.5;cursor:not-allowed}
+.ghost-btn{width:48px;height:48px;border-radius:10px;border:1px solid var(--line2);background:none;display:grid;place-items:center;color:var(--cream)}
+.ghost-btn svg{width:20px;height:20px}
+
+/* sections */
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:34px 0 12px}
+.sec-head h2{margin:0;font:600 15px var(--ui)}
+.sec-head small{font:400 11px var(--mono);color:var(--muted)}
+
+/* kinds */
+.kinds{display:flex;gap:16px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;scroll-snap-type:x proximity}
+.kinds::-webkit-scrollbar{display:none}
+.kind{flex:none;scroll-snap-align:start;border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:7px;color:var(--cream)}
+.kind .disc{width:68px;height:68px;border-radius:50%;background:var(--tone);display:grid;place-items:center;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(241,233,220,.14);transition:box-shadow .2s}
+.kind .disc img{width:100%;height:100%;object-fit:cover;opacity:.92}
+.kind .disc svg{width:28px;height:28px}
+.kind span{font-size:12px;font-weight:500}
+.kind small{font:400 10px var(--mono);color:var(--muted);margin-top:-5px}
+.kind[aria-pressed="true"] .disc{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--gold)}
+.kind:disabled{opacity:.45;cursor:default}
+
+/* grid */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.chip{height:36px;padding:0 14px;border-radius:18px;border:1px solid var(--line2);background:none;color:var(--cream);font:500 13px var(--ui)}
+.chip[aria-pressed="true"]{background:var(--cream);color:var(--bg);border-color:var(--cream)}
+.sel{height:36px;border-radius:18px;border:1px solid var(--line2);background:var(--bg);color:var(--cream);padding:0 12px;font:500 13px var(--ui)}
+.count{margin-left:auto;font:400 11px var(--mono);color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 8px}
+@media (min-width:720px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px 12px}}
+@media (min-width:1100px){.grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.card{display:flex;flex-direction:column;min-width:0;color:var(--cream);text-decoration:none}
+.card .tile{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--tone,#222)}
+.card .tile img{width:100%;height:100%;object-fit:cover;object-position:center 35%}
+.card .open{position:absolute;inset:0;border:0;background:none;padding:0;z-index:1}
+.card .heart{position:absolute;right:8px;top:8px;z-index:2;width:34px;height:34px;border-radius:17px;border:0;background:rgba(241,233,220,.92);display:grid;place-items:center;color:var(--ink)}
+.card .heart svg{width:16px;height:16px}
+.card .heart[aria-pressed="true"] path{fill:#E5533D;stroke:#E5533D}
+.card .tag{position:absolute;left:8px;bottom:8px;z-index:2;padding:4px 8px;border-radius:6px;background:rgba(15,19,20,.78);font:500 11px var(--ui);color:var(--cream)}
+.card .tag.long{background:var(--sun);color:#111;font-weight:700}
+.card .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:8px 4px 0}
+.card .row strong{font-size:15px}
+.card .row span{font-size:12px;color:var(--muted)}
+.card .ttl{margin:2px 4px 0;font:italic 400 17px/1.2 var(--serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card.adopted .tile img{filter:grayscale(.8);opacity:.6}
+.stamp{position:absolute;left:50%;top:46%;z-index:2;transform:translate(-50%,-50%) rotate(-10deg);padding:5px 10px;border:2px solid var(--gold);border-radius:4px;color:var(--gold);font:600 13px var(--ui);letter-spacing:.12em;background:rgba(15,19,20,.6)}
+.more{display:flex;justify-content:center;margin-top:26px}
+.empty{grid-column:1/-1;text-align:center;padding:40px 0;color:var(--muted)}
+
+/* rail */
+.rail{position:relative;overflow-x:auto;scrollbar-width:none;padding-top:2px}
+.rail::-webkit-scrollbar{display:none}
+.rail::before{content:"";position:absolute;left:0;top:11px;height:2px;width:max(100%,var(--rail-w,100%));background:#6B6358}
+.rail-track{display:flex;gap:12px;width:max-content;padding:0 2px 6px}
+.rail-item{width:118px;border:0;background:none;padding:0;color:var(--muted);display:flex;flex-direction:column;align-items:center}
+.rail-item svg{width:30px;height:22px}
+.rail-item .ph{width:118px;height:140px;border-radius:8px;overflow:hidden;margin-top:-3px;background:var(--card)}
+.rail-item img{width:100%;height:100%;object-fit:cover}
+.rail-item span{margin-top:6px;font:400 10px var(--mono);max-width:118px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* policy + footer */
+.policy{display:grid;gap:22px;margin-top:8px;color:var(--story)}
+@media (min-width:900px){.policy{grid-template-columns:1fr 1fr}}
+.policy h3{margin:0 0 6px;font:400 26px/1.1 var(--serif);color:var(--cream)}
+.policy p{margin:0 0 10px;max-width:60ch}
+footer{margin-top:44px;border-top:1px solid var(--line);padding:26px var(--pad) calc(96px + env(safe-area-inset-bottom,0px));text-align:center;color:var(--muted);font-size:13px}
+footer .sig{font:italic 400 19px var(--serif);color:var(--gold);margin:0 0 10px}
+footer nav{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+@media (min-width:768px){footer{padding-bottom:40px}}
+
+/* bottom tabs */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--bg);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabs button{height:60px;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:500 11px var(--ui);color:var(--muted)}
+.tabs button svg{width:20px;height:20px}
+.tabs button[aria-current="true"]{color:var(--gold);font-weight:600}
+@media (min-width:768px){.tabs{display:none}}
+
+/* product sheet */
+dialog{border:0;padding:0;color:var(--cream);background:var(--bg)}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+#product{width:100%;max-width:100%;height:100%;max-height:100%;margin:0}
+.p-wrap{min-height:100%;display:flex;flex-direction:column;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+.gallery{position:relative;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;background:var(--tone,#222)}
+.gallery::-webkit-scrollbar{display:none}
+.gallery img{flex:none;width:100%;aspect-ratio:4/5;object-fit:cover;scroll-snap-align:center}
+.g-top{position:absolute;left:0;right:0;top:calc(10px + env(safe-area-inset-top,0px));display:flex;justify-content:space-between;padding:0 12px;z-index:3;pointer-events:none}
+.g-top button{pointer-events:auto;width:44px;height:44px;border-radius:22px;border:0;background:rgba(15,19,20,.75);display:grid;place-items:center;color:var(--cream)}
+.g-top svg{width:20px;height:20px}
+.dots{display:flex;gap:6px;justify-content:center;padding:10px 0 0}
+.dots span{width:6px;height:6px;border-radius:3px;background:var(--line2)}
+.dots span.on{width:18px;background:var(--cream)}
+.p-media{position:relative}
+.p-info{padding:16px 18px 0}
+.p-file{display:flex;justify-content:space-between;font:400 11px var(--mono);color:var(--gold)}
+.p-file span:last-child{color:var(--muted)}
+.p-info h2{margin:8px 0 0;font:italic 400 clamp(32px,9vw,44px)/1.02 var(--serif)}
+.p-sub{margin:6px 0 0;color:var(--story);font-size:14px}
+.p-price{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px}
+.p-price strong{font-size:26px;margin-right:4px}
+.pill{padding:4px 10px;border-radius:999px;border:1px solid var(--line2);font-size:12px}
+.p-note{margin:10px 0 0;font-size:12.5px;color:var(--muted)}
+.keeper{margin:18px 0 0;border-radius:14px;background:var(--card);padding:16px}
+.keeper h3{margin:0;font:400 11px var(--mono);color:var(--gold)}
+.keeper p{margin:8px 0 0;font:400 18px/1.4 var(--serif)}
+.keeper .sig{font-style:italic;font-size:14px;color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.facts div{border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+.facts dt{font-size:11px;color:var(--muted)}
+.facts dd{margin:4px 0 0;font-size:13px;line-height:1.35;white-space:pre-line}
+.p-small{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--story)}
+.p-bar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--bg);border-top:1px solid var(--line);padding:12px 14px calc(14px + env(safe-area-inset-bottom,0px));display:flex;gap:10px}
+.p-bar .adopt{height:52px;border-radius:12px;font-size:16px}
+.p-bar .ghost-btn{width:52px;height:52px;border-radius:12px}
+@media (min-width:900px){
+  #product{max-width:1080px;height:auto;max-height:92vh;margin:auto;border-radius:16px}
+  .p-wrap{flex-direction:row;padding-bottom:0}
+  .p-media{flex:0 0 52%}
+  .gallery img{aspect-ratio:4/5;height:auto}
+  .p-right{flex:1;min-width:0;display:flex;flex-direction:column;max-height:92vh;overflow:auto}
+  .p-bar{position:sticky;bottom:0;margin-top:auto}
+}
+
+/* bag */
+#bag{margin:0 0 0 auto;width:min(440px,100%);height:100%;max-height:100%;background:var(--bg)}
+.b-in{min-height:100%;display:flex;flex-direction:column;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px))}
+.b-head{display:flex;justify-content:space-between;align-items:center}
+.b-head h2{margin:0;font:400 32px var(--serif)}
+.b-list{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:12px}
+.b-list li{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px}
+.b-list img{width:64px;height:80px;object-fit:cover;border-radius:6px}
+.b-list b{display:block;font:italic 400 18px/1.15 var(--serif)}
+.b-list small{color:var(--muted)}
+.b-list button{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:12px}
+.progress{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin:18px 0 6px}
+.progress i{display:block;height:100%;background:var(--gold)}
+.totals{display:grid;grid-template-columns:1fr auto;gap:6px;margin:14px 0}
+.totals strong{font-weight:600}
+.b-foot{margin-top:auto}
+.b-foot p{color:var(--muted);font-size:12.5px}
+
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);opacity:0;background:var(--cream);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;transition:.25s;z-index:60;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <svg class="hanger" viewBox="40 20 320 190" aria-hidden="true"><path d="M200 104V90c0-10 16-16 16-34 0-18-13-28-26-28-14 0-22 10-22 22M200 110c-24 14-90 46-136 66-14 6-14 18 2 18h268c16 0 16-12 2-18-46-20-112-52-136-66" fill="none" stroke="#15191A" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="ship" id="shipText">Free US shipping $55+ through 2027</span>
+    <button class="icon-btn" id="searchBtn" type="button" aria-label="Search" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5" stroke-linecap="round"/></svg></button>
+    <button class="icon-btn" id="savedBtn" type="button" aria-label="Saved pieces"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><span class="badge" id="savedN" hidden>0</span></button>
+    <button class="icon-btn" id="bagBtn" type="button" aria-label="Bag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="badge" id="bagN" hidden>0</span></button>
+  </div>
+  <div class="search" id="searchBar"><label class="sr" for="q">Search pieces</label><input id="q" type="search" placeholder="Search a piece, a brand, a color" autocomplete="off"></div>
+</header>
+<div class="preview-note" id="previewNote" role="note" hidden></div>
+
+<main class="wrap" id="top">
+  <section class="hero" aria-labelledby="h1">
+    <div class="intro">
+      <svg class="seal" viewBox="0 0 760 450" role="img" aria-label="Next Keeper, Home for Wayward Garments, est. 2026">
+        <defs><path id="arc" d="M128 330a252 252 0 0 1 504 0"/></defs>
+        <text font-family="Inter,sans-serif" font-weight="500" font-size="22" letter-spacing="7.5" fill="#F1E9DC"><textPath href="#arc" startOffset="50%" text-anchor="middle">HOME FOR WAYWARD GARMENTS</textPath></text>
+        <g transform="translate(220 84) scale(.8)"><path d="M200 104V90c0-10 16-16 16-34 0-18-13-28-26-28-14 0-22 10-22 22M200 110c-24 14-90 46-136 66-14 6-14 18 2 18h268c16 0 16-12 2-18-46-20-112-52-136-66" fill="none" stroke="#E2BF7E" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <text x="380" y="380" text-anchor="middle" font-family="'Cormorant Garamond',Georgia,serif" font-style="italic" font-weight="500" font-size="112" fill="#F1E9DC">Next Keeper</text>
+        <text x="380" y="430" text-anchor="middle" font-family="Inter,sans-serif" font-size="16" letter-spacing="5" fill="#E2BF7E">EST. 2026</text>
+      </svg>
+      <h1 id="h1">Every piece here is waiting for its next keeper.</h1>
+      <p class="slogan">We don’t sell clothes. We sell what they’ve been through. Probably.</p>
+    </div>
+
+    <div class="stage-card" aria-label="Tonight’s resident">
+      <div class="stage-head"><span id="sNo">Tonight’s resident</span><span id="sPos"></span></div>
+      <div class="stage" id="stage">
+        <div class="rod" aria-hidden="true"></div>
+        <div class="hooks" aria-hidden="true"></div>
+        <div class="floor" id="sFloor" aria-hidden="true"></div>
+        <div class="piece" id="sPiece"><svg viewBox="150 20 100 100" aria-hidden="true"><path d="M200 104V90c0-10 16-16 16-34 0-18-13-28-26-28-14 0-22 10-22 22" fill="none" stroke="#F1E9DC" stroke-width="7" stroke-linecap="round"/></svg><div class="photo"><img id="sImg" alt=""></div></div>
+      </div>
+      <div class="stage-meta" id="sMeta"><div><span class="name" id="sName"></span><span class="sub" id="sSub"></span></div><span class="price" id="sPrice"></span></div>
+      <p class="stage-line" id="sLine"></p>
+      <div class="stage-controls">
+        <button class="adopt" id="sAdopt" type="button">Adopt me</button>
+        <button class="ghost-btn" id="sPause" type="button" aria-label="Pause the rail" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="7" y="5" width="3.5" height="14" rx="1"/><rect x="13.5" y="5" width="3.5" height="14" rx="1"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <div class="sec-head"><h2>Find your kind</h2><small>Swipe</small></div>
+  <div class="kinds" id="kinds" role="group" aria-label="Kind of piece"></div>
+
+  <div class="sec-head" id="residents"><h2>The residents</h2><small id="count"></small></div>
+  <div class="toolbar">
+    <button class="chip" id="savedOnly" type="button" aria-pressed="false">Saved</button>
+    <label class="sr" for="sort">Sort</label>
+    <select class="sel" id="sort"><option value="new">Newest</option><option value="low">Price, low to high</option><option value="high">Price, high to low</option></select>
+    <label class="sr" for="size">Size</label>
+    <select class="sel" id="size"><option value="">Any size</option></select>
+  </div>
+  <div class="grid" id="grid" aria-live="polite"></div>
+  <div class="more"><button class="chip" id="moreBtn" type="button">Show 24 more</button></div>
+
+  <div class="sec-head"><h2>On the rail</h2><small>Swipe</small></div>
+  <div class="rail" id="rail"><div class="rail-track" id="railTrack"></div></div>
+
+  <section id="shipping" aria-labelledby="shipH">
+    <div class="sec-head"><h2 id="shipH">Shipping and returns</h2></div>
+    <div class="policy">
+      <div><h3>Shipping</h3><p>We ship within the United States only, from Venice Beach, California. Shipping is free on orders of $55 or more through December 31, 2027. Below that, US shipping is $6.99.</p></div>
+      <div><h3>Returns</h3><p>Every piece is one of a kind and is photographed before it is packed. All sales are final, with one exception: if a piece arrives different from its file (a tear we did not mention, a different color or size), write to us within 3 days of delivery with photos. We inspect the returned piece. If we confirm the difference, you choose an exchange or a refund. Worn pieces, and changes of heart, cannot be accepted. If a return is not approved, the piece is sent back to you at your cost.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p class="sig">Every story is true. Some more than others.</p>
+  <p>Next Keeper by Heron CA. Venice Beach, California.</p>
+  <nav aria-label="Legal"><a href="#shipping">Shipping & returns</a><a href="legal/terms/">Terms</a><a href="legal/privacy/">Privacy</a></nav>
+</footer>
+
+<nav class="tabs" aria-label="Main">
+  <button type="button" data-tab="home" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 11l8-6 8 6v9H4z"/></svg>Shelter</button>
+  <button type="button" data-tab="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>Search</button>
+  <button type="button" data-tab="saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>Saved</button>
+  <button type="button" data-tab="bag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>Bag</button>
+</nav>
+
+<dialog id="product" aria-labelledby="pName"></dialog>
+<dialog id="bag" aria-labelledby="bagH"></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+"use strict";
+const API = "https://wvvizyrroqejwrfadbpx.supabase.co/functions/v1/nextkeeper-shop";
+const STUDIO = true; // studio build: checkout stays off
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money = c => "$" + (c / 100).toFixed(c % 100 ? 2 : 0);
+const store = { get(k, d){ try { const v = localStorage.getItem("nk:studio:" + k); return v ? JSON.parse(v) : d; } catch(e){ return d; } }, set(k, v){ try { localStorage.setItem("nk:studio:" + k, JSON.stringify(v)); } catch(e){} } };
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const KINDS = [
+  { id:"jackets", label:"Jackets", tone:"#A4532F", icon:'<path d="M8 4l4 3 4-3 4 3-2 5-2-1v9H8v-9l-2 1-2-5z"/>' },
+  { id:"tops", label:"Tops", tone:"#1F5A5C", icon:'<path d="M8 4h8l4 4-3 3v9H7v-9L4 8z"/>' },
+  { id:"dresses", label:"Dresses", tone:"#6B2A33", icon:'<path d="M9 3h6l-1 6 5 12H5l5-12z"/>' },
+  { id:"bottoms", label:"Bottoms", tone:"#B88A2E", icon:'<path d="M7 3h10l1 18h-4l-2-11-2 11H6z"/>' },
+  { id:"accessories", label:"Accessories", tone:"#5B6636", icon:'<path d="M5 9h14l-1 11H6z"/><path d="M9 9V7a3 3 0 0 1 6 0v2"/>' },
+  { id:"shoes", label:"Shoes", tone:"#2F4466", icon:'<path d="M3 16c0-3 1-7 3-7 1 2 3 3 6 3l6 1c2 0 3 1 3 3v1H3z"/>' }
+];
+const TONE = Object.fromEntries(KINDS.map(k => [k.id, k.tone]));
+function kindOf(x){
+  const t = (x.title + " " + (x.category || "")).toLowerCase();
+  if (/\b(shoes?|boots?|sneakers?|heels?|loafers?|sandals?)\b/.test(t)) return "shoes";
+  if (/\b(bags?|belts?|scarf|scarves|hats?|jewelry|necklaces?|purses?|wallets?)\b/.test(t)) return "accessories";
+  if (/\b(dress|dresses|jumpsuits?|rompers?|gowns?)\b/.test(t)) return "dresses";
+  if (/\b(coat|jacket|blazer|bomber|parka|anorak|puffer|trench|vest|cardigan)/.test(t)) return "jackets";
+  if (/\b(pants?|jeans?|skirts?|shorts|trousers?|leggings)\b/.test(t)) return "bottoms";
+  return "tops";
+}
+function sizeOf(x){ if (x.size) return x.size; const m = (x.title || "").match(/\b(?:size|sz)\s*([A-Z0-9]{1,4})\b/i); return m ? m[1].toUpperCase() : ""; }
+function cleanTitle(t){ return (t || "").replace(/\s*\b(?:size|sz)\s*[A-Z0-9]{1,4}\b/i, "").trim(); }
+function daysSince(d){ if (!d) return null; const t = Date.parse(d + "T12:00:00"); if (isNaN(t)) return null; const n = Math.floor((Date.now() - t) / 864e5); return n >= 0 ? n : null; }
+function norm(x){
+  const no = (x.sku || x.id).replace(/^HC-[A-Z]-/, "");
+  return { id: x.id, sku: x.sku, no, name: x.alias || cleanTitle(x.title), title: cleanTitle(x.title), kind: kindOf(x), size: sizeOf(x),
+    price: x.site_price, images: (x.images || []).filter(Boolean), adopted: !!(x.adopted || x.sold), story: x.story || "",
+    description: (x.description || "").trim(), arrived: x.arrived || "", days: daysSince(x.arrived), care: x.care || "", origin: x.origin || "" };
+}
+
+let DATA = [], byNo = new Map(), mode = "live", FREE = 5500, FEE = 699;
+let saved = new Set(store.get("saved", [])), bag = store.get("bag", []);
+const state = { kind: "", size: "", sort: "new", savedOnly: false, q: "", shown: 24 };
+
+function toast(m){ const t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("on"), 2200); }
+
+async function load(){
+  const wantPreview = new URLSearchParams(location.search).get("preview") === "heron";
+  if (!wantPreview){
+    try {
+      const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "list" }) });
+      const j = await r.json();
+      if (j.items && j.items.length){ DATA = j.items.map(norm); FREE = j.free_ship ?? FREE; FEE = j.ship_fee ?? FEE; mode = "live"; }
+    } catch(e){}
+  }
+  if (!DATA.length){
+    const j = await (await fetch("preview.json")).json();
+    DATA = j.items.map(norm); mode = "preview";
+  }
+  byNo = new Map(DATA.map(r => [r.no, r]));
+  bag = bag.filter(n => byNo.has(n) && !byNo.get(n).adopted);
+  const note = $("#previewNote");
+  note.hidden = false;
+  note.textContent = mode === "preview"
+    ? "Studio preview with real Heron pieces and prices. Photos are not standardized yet. Checkout is off."
+    : "Studio preview. Live Next Keeper catalog. Checkout is off.";
+}
+
+/* ---------- kinds ---------- */
+function renderKinds(){
+  const counts = {}; DATA.forEach(r => { if (!r.adopted) counts[r.kind] = (counts[r.kind] || 0) + 1; });
+  $("#kinds").innerHTML = KINDS.map(k => {
+    const sample = DATA.find(r => r.kind === k.id && r.images[0] && !r.adopted);
+    const inner = sample ? `<img src="${esc(sample.images[0])}" alt="" loading="lazy">` : `<svg viewBox="0 0 24 24" fill="none" stroke="#F1E9DC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${k.icon}</svg>`;
+    const n = counts[k.id] || 0;
+    return `<button class="kind" type="button" data-kind="${k.id}" aria-pressed="${state.kind === k.id}" ${n ? "" : "disabled"}><span class="disc" style="--tone:${k.tone}">${inner}</span><span>${k.label}</span><small>${n ? n : "Soon"}</small></button>`;
+  }).join("");
+}
+
+/* ---------- grid ---------- */
+function filtered(){
+  const q = state.q.trim().toLowerCase();
+  const list = DATA.filter(r => (!state.kind || r.kind === state.kind) && (!state.size || r.size === state.size) && (!state.savedOnly || saved.has(r.no)) && (!q || (r.title + " " + r.name + " " + r.kind + " " + r.description).toLowerCase().includes(q)));
+  list.sort((a, b) => Number(a.adopted) - Number(b.adopted) || (state.sort === "low" ? a.price - b.price : state.sort === "high" ? b.price - a.price : 0));
+  return list;
+}
+const heart = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>';
+function longest(){ let best = null; DATA.forEach(r => { if (!r.adopted && r.days != null && (!best || r.days > best.days)) best = r; }); return best; }
+function card(r, lng){
+  const tag = r.adopted ? "" : r.days != null ? `<span class="tag${lng && lng.no === r.no ? " long" : ""}">Day ${r.days}${lng && lng.no === r.no ? " · longest here" : ""}</span>` : "";
+  return `<article class="card${r.adopted ? " adopted" : ""}">
+    <div class="tile" style="--tone:${TONE[r.kind]}">${r.images[0] ? `<img src="${esc(r.images[0])}" alt="${esc(r.title)}" loading="lazy">` : ""}${tag}${r.adopted ? '<span class="stamp">ADOPTED</span>' : ""}
+      <button class="open" type="button" data-open="${esc(r.no)}"><span class="sr">Open ${esc(r.title)}</span></button>
+      <button class="heart" type="button" data-save="${esc(r.no)}" aria-pressed="${saved.has(r.no)}" aria-label="Save ${esc(r.title)}">${heart}</button>
+    </div>
+    <div class="row"><strong>${r.adopted ? "Adopted" : money(r.price)}</strong><span>${esc(r.size)}</span></div>
+    <p class="ttl">${esc(r.name)}</p>
+  </article>`;
+}
+function renderGrid(){
+  const list = filtered(), vis = list.slice(0, state.shown), lng = longest();
+  $("#grid").innerHTML = vis.length ? vis.map(r => card(r, lng)).join("") : `<p class="empty">${state.savedOnly ? "Nothing saved yet. Tap a heart to keep a piece here." : "No piece matches that. Clear a filter to see more."}</p>`;
+  $("#count").textContent = `${list.filter(r => !r.adopted).length} waiting`;
+  $("#moreBtn").hidden = vis.length >= list.length;
+  $("#savedOnly").setAttribute("aria-pressed", state.savedOnly);
+  const sn = $("#savedN"); sn.hidden = !saved.size; sn.textContent = saved.size;
+  const bn = $("#bagN"); bn.hidden = !bag.length; bn.textContent = bag.length;
+}
+function renderSizes(){
+  const order = ["XXS","XS","S","M","L","XL","XXL"];
+  const sizes = [...new Set(DATA.map(r => r.size).filter(Boolean))].sort((a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99) || a.localeCompare(b, "en", { numeric: true }));
+  $("#size").innerHTML = '<option value="">Any size</option>' + sizes.map(s => `<option>${esc(s)}</option>`).join("");
+}
+
+/* ---------- rail ---------- */
+function renderRail(){
+  const pick = DATA.filter(r => !r.adopted && r.images[0]).slice(0, 14);
+  $("#railTrack").innerHTML = pick.map(r => `<button class="rail-item" type="button" data-open="${esc(r.no)}" aria-label="${esc(r.title)}"><svg viewBox="150 20 100 100" aria-hidden="true"><path d="M200 104V90c0-10 16-16 16-34 0-18-13-28-26-28-14 0-22 10-22 22" fill="none" stroke="#B9B0A2" stroke-width="7" stroke-linecap="round"/></svg><span class="ph"><img src="${esc(r.images[0])}" alt="" loading="lazy"></span><span>${esc(r.name)}</span></button>`).join("");
+  requestAnimationFrame(() => $("#rail").style.setProperty("--rail-w", $("#railTrack").scrollWidth + "px"));
+}
+
+/* ---------- stage: pulled from the rack ---------- */
+const stage = { list: [], i: 0, step: 0, timer: null, paused: false };
+const STEPS = [
+  { x: 70, y: -4, s: .42, r: 0, o: 0, text: 0, ms: 60, jump: true },
+  { x: 0, y: 0, s: 1.04, r: -2, o: 1, text: 1, ms: 950 },
+  { x: 0, y: 0, s: 1, r: 1.2, o: 1, text: 1, ms: 650 },
+  { x: 0, y: 0, s: 1, r: 0, o: 1, text: 1, ms: 3000 },
+  { x: -70, y: -4, s: .42, r: 0, o: 0, text: 0, ms: 950 }
+];
+function stageShow(){
+  const r = stage.list[stage.i]; if (!r) return;
+  const st = reduce ? STEPS[3] : STEPS[stage.step];
+  const p = $("#sPiece");
+  p.style.transition = st.jump ? "none" : "transform .9s cubic-bezier(.3,.1,.2,1), opacity .7s ease";
+  p.style.transform = `translateX(calc(-50% + ${st.x}%)) translateY(${st.y}%) scale(${st.s}) rotate(${st.r}deg)`;
+  p.style.opacity = st.o;
+  $("#sFloor").style.opacity = st.o;
+  $("#sMeta").style.opacity = $("#sLine").style.opacity = st.text;
+  if (st.jump || reduce){
+    $("#stage").style.setProperty("--tone", TONE[r.kind]);
+    $("#sImg").src = r.images[0]; $("#sImg").alt = r.title;
+    $("#sNo").textContent = `Tonight’s resident · N° ${r.no}`;
+    $("#sPos").textContent = `${stage.i + 1} / ${stage.list.length}`;
+    $("#sName").textContent = r.name;
+    $("#sSub").textContent = [r.name !== r.title ? r.title : "", r.size ? "Size " + r.size : "", r.days != null ? `Day ${r.days} at the shelter` : ""].filter(Boolean).join(", ");
+    $("#sPrice").textContent = money(r.price);
+    $("#sLine").textContent = r.story ? r.story.split(/(?<=\.)\s/).slice(0, 2).join(" ") : "The keeper is still writing this one’s file.";
+    $("#sAdopt").dataset.open = r.no;
+  }
+}
+function stageTick(){
+  clearTimeout(stage.timer);
+  if (stage.paused || reduce) return;
+  stage.timer = setTimeout(() => {
+    stage.step++;
+    if (stage.step >= STEPS.length){ stage.step = 0; stage.i = (stage.i + 1) % stage.list.length; }
+    stageShow(); stageTick();
+  }, STEPS[stage.step].ms);
+}
+function startStage(){
+  stage.list = DATA.filter(r => !r.adopted && r.images[0]).slice(0, 8);
+  if (!stage.list.length){ $(".stage-card").hidden = true; return; }
+  $(".hooks").innerHTML = Array.from({ length: 9 }, () => '<svg viewBox="150 20 100 100"><path d="M200 104V90c0-10 16-16 16-34 0-18-13-28-26-28-14 0-22 10-22 22" fill="none" stroke="#F1E9DC" stroke-width="7" stroke-linecap="round"/></svg>').join("");
+  stage.step = 0; stageShow(); stageTick();
+}
+$("#sPause").addEventListener("click", e => {
+  stage.paused = !stage.paused;
+  e.currentTarget.setAttribute("aria-pressed", stage.paused);
+  e.currentTarget.setAttribute("aria-label", stage.paused ? "Play the rail" : "Pause the rail");
+  e.currentTarget.innerHTML = stage.paused ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg>' : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="7" y="5" width="3.5" height="14" rx="1"/><rect x="13.5" y="5" width="3.5" height="14" rx="1"/></svg>';
+  if (!stage.paused) stageTick(); else clearTimeout(stage.timer);
+});
+document.addEventListener("visibilitychange", () => { if (document.hidden) clearTimeout(stage.timer); else stageTick(); });
+
+/* ---------- product ---------- */
+const pDlg = $("#product");
+function openProduct(no){
+  const r = byNo.get(no); if (!r) return;
+  const imgs = r.images.length ? r.images : [""];
+  const inBag = bag.includes(r.no);
+  pDlg.innerHTML = `<div class="p-wrap">
+    <div class="p-media">
+      <div class="gallery" id="gal" style="--tone:${TONE[r.kind]}">${imgs.map((s, i) => s ? `<img src="${esc(s)}" alt="${esc(r.title)}, photo ${i + 1}" ${i ? 'loading="lazy"' : ""}>` : "").join("")}</div>
+      <div class="g-top"><button type="button" data-close aria-label="Back to the shelter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><button type="button" data-share aria-label="Copy link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M7 8l5-5 5 5"/><path d="M5 13v7h14v-7"/></svg></button></div>
+      <div class="dots" id="dots">${imgs.length > 1 ? imgs.map((_, i) => `<span class="${i ? "" : "on"}"></span>`).join("") : ""}</div>
+    </div>
+    <div class="p-right">
+      <div class="p-info">
+        <div class="p-file"><span>Intake file · N° ${esc(r.no)}</span><span>${esc(KINDS.find(k => k.id === r.kind).label)}</span></div>
+        <h2 id="pName">${esc(r.name)}</h2>
+        ${r.name !== r.title ? `<p class="p-sub">${esc(r.title)}</p>` : ""}
+        <div class="p-price"><strong>${r.adopted ? "Adopted" : money(r.price)}</strong>${r.size ? `<span class="pill">Size ${esc(r.size)}</span>` : ""}<span class="pill">One of one</span>${r.days != null ? `<span class="pill">Day ${r.days} at the shelter</span>` : ""}</div>
+        <p class="p-note">Ships free in the US on $55+ through 2027.</p>
+        <div class="keeper"><h3>From the keeper</h3><p>${r.story ? esc(r.story) : "The keeper is still writing this one’s file."}</p><p class="sig">Every story is true. Some more than others.</p></div>
+        <dl class="facts">
+          <div><dt>Condition and details</dt><dd>${esc(r.description.replace(/^Condition:\s*$/i, "") || "Details coming with the file.")}</dd></div>
+          <div><dt>Size</dt><dd>${esc(r.size || "See photos")}</dd></div>
+          ${r.origin ? `<div><dt>Made in</dt><dd>${esc(r.origin)}</dd></div>` : ""}
+          ${r.care ? `<div><dt>Care</dt><dd>${esc(r.care)}</dd></div>` : ""}
+          ${r.arrived ? `<div><dt>Came in</dt><dd>${esc(new Date(r.arrived + "T12:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }))}</dd></div>` : ""}
+        </dl>
+        <p class="p-small">A signed adoption certificate travels in the box. Returns only if a piece arrives different from its file. <a href="#shipping" data-close>Shipping and returns</a></p>
+      </div>
+      <div class="p-bar"><button class="adopt" type="button" data-adopt="${esc(r.no)}" ${r.adopted ? "disabled" : ""}>${r.adopted ? "Adopted" : inBag ? "In your bag" : "Adopt me · " + money(r.price)}</button><button class="ghost-btn" type="button" data-save="${esc(r.no)}" aria-pressed="${saved.has(r.no)}" aria-label="Save ${esc(r.title)}">${saved.has(r.no) ? heart.replace('fill="none"', 'fill="#E5533D"').replace('stroke="currentColor"', 'stroke="#E5533D"') : heart}</button></div>
+    </div>
+  </div>`;
+  if (!pDlg.open) pDlg.showModal();
+  try { history.replaceState(null, "", "#r-" + encodeURIComponent(r.no)); } catch(e){}
+  const gal = $("#gal");
+  gal.addEventListener("scroll", () => { const i = Math.round(gal.scrollLeft / gal.clientWidth); document.querySelectorAll("#dots span").forEach((d, k) => d.classList.toggle("on", k === i)); }, { passive: true });
+}
+pDlg.addEventListener("close", () => { if (location.hash.startsWith("#r-")) try { history.replaceState(null, "", location.pathname + location.search); } catch(e){} });
+
+/* ---------- bag ---------- */
+const bDlg = $("#bag");
+function openBag(){
+  const items = bag.map(n => byNo.get(n)).filter(Boolean);
+  const sub = items.reduce((s, r) => s + r.price, 0), free = sub >= FREE, ship = items.length && !free ? FEE : 0;
+  bDlg.innerHTML = `<div class="b-in">
+    <div class="b-head"><h2 id="bagH">Your bag</h2><button class="ghost-btn" type="button" data-close aria-label="Close bag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    ${items.length ? `<ul class="b-list">${items.map(r => `<li><img src="${esc(r.images[0] || "")}" alt=""><div><b>${esc(r.name)}</b><small>${money(r.price)}${r.size ? ", size " + esc(r.size) : ""}</small></div><button type="button" data-remove="${esc(r.no)}">Remove</button></li>`).join("")}</ul>
+      <div class="progress" aria-hidden="true"><i style="width:${Math.min(100, sub / FREE * 100)}%"></i></div>
+      <p style="margin:0;font-size:14px">${free ? "Free US shipping unlocked." : `You’re ${money(FREE - sub)} away from free US shipping.`}</p>
+      <div class="totals"><span>Subtotal</span><span>${money(sub)}</span><span>US shipping</span><span>${free ? "Free" : money(ship)}</span><strong>Total before tax</strong><strong>${money(sub + ship)}</strong></div>`
+      : `<p style="color:var(--muted)">Nobody in here yet. Open a file and tap Adopt me.</p>`}
+    <div class="b-foot"><button class="adopt" type="button" disabled style="width:100%">${STUDIO ? "Studio preview: checkout is off" : "Adopt"}</button><p>Secure checkout by Square. US addresses only. Sales tax is added at checkout.</p></div>
+  </div>`;
+  if (!bDlg.open) bDlg.showModal();
+}
+[pDlg, bDlg].forEach(d => d.addEventListener("click", e => { if (e.target === d) d.close(); }));
+
+/* ---------- events ---------- */
+function toggleSave(no){ saved.has(no) ? saved.delete(no) : saved.add(no); store.set("saved", [...saved]); toast(saved.has(no) ? "Saved" : "Removed from saved"); }
+function addBag(no){
+  const r = byNo.get(no); if (!r || r.adopted) return;
+  if (bag.includes(no)){ toast("Already in your bag. There is only one."); return; }
+  bag.push(no); store.set("bag", bag); toast(`${r.name} is in your bag`);
+}
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-open],[data-save],[data-adopt],[data-remove],[data-close],[data-share],[data-kind],[data-tab]");
+  if (!t) return;
+  if (t.dataset.close !== undefined){ const d = t.closest("dialog"); if (d) d.close(); return; }
+  if (t.dataset.share !== undefined){ navigator.clipboard?.writeText(location.href).then(() => toast("Link copied"), () => {}); return; }
+  if (t.dataset.save){ toggleSave(t.dataset.save); renderGrid(); if (pDlg.open) openProduct(t.dataset.save); return; }
+  if (t.dataset.adopt){ addBag(t.dataset.adopt); renderGrid(); openProduct(t.dataset.adopt); return; }
+  if (t.dataset.remove){ bag = bag.filter(n => n !== t.dataset.remove); store.set("bag", bag); renderGrid(); openBag(); return; }
+  if (t.dataset.kind){ state.kind = state.kind === t.dataset.kind ? "" : t.dataset.kind; state.shown = 24; renderKinds(); renderGrid(); $("#residents").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); return; }
+  if (t.dataset.tab){
+    document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-current", b === t));
+    if (t.dataset.tab === "home") scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    if (t.dataset.tab === "search") toggleSearch(true);
+    if (t.dataset.tab === "saved"){ state.savedOnly = true; renderGrid(); $("#residents").scrollIntoView(); }
+    if (t.dataset.tab === "bag") openBag();
+    return;
+  }
+  if (t.dataset.open) openProduct(t.dataset.open);
+});
+function toggleSearch(force){ const on = force ?? !$("#searchBar").classList.contains("on"); $("#searchBar").classList.toggle("on", on); $("#searchBtn").setAttribute("aria-expanded", on); if (on) $("#q").focus(); }
+$("#searchBtn").addEventListener("click", () => toggleSearch());
+$("#q").addEventListener("input", e => { state.q = e.target.value; state.shown = 24; renderGrid(); });
+$("#q").addEventListener("keydown", e => { if (e.key === "Enter") $("#residents").scrollIntoView(); });
+$("#savedBtn").addEventListener("click", () => { state.savedOnly = true; renderGrid(); $("#residents").scrollIntoView(); });
+$("#savedOnly").addEventListener("click", () => { state.savedOnly = !state.savedOnly; renderGrid(); });
+$("#bagBtn").addEventListener("click", openBag);
+$("#sort").addEventListener("change", e => { state.sort = e.target.value; renderGrid(); });
+$("#size").addEventListener("change", e => { state.size = e.target.value; state.shown = 24; renderGrid(); });
+$("#moreBtn").addEventListener("click", () => { state.shown += 24; renderGrid(); });
+
+(async () => {
+  try { await load(); } catch(e){ $("#grid").innerHTML = '<p class="empty">The catalog did not load. Refresh the page to try again.</p>'; return; }
+  renderKinds(); renderSizes(); renderGrid(); renderRail(); startStage();
+  const m = location.hash.match(/^#r-(.+)$/); if (m && byNo.has(decodeURIComponent(m[1]))) openProduct(decodeURIComponent(m[1]));
+})();
+})();
+</script>
+</body>
+</html>

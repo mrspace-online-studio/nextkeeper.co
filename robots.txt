@@ -40,3 +40,4 @@ Disallow: /admin.html
 Disallow: /no-scrape/
 
 Sitemap: https://nextkeeper.co/sitemap.xml
+Disallow: /studio/
